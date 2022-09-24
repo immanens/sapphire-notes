@@ -19,6 +19,11 @@ public class FocusBehavior : AvaloniaObject
         }));
     }
 
+    /// <summary>
+    /// Фокусировка текст-бокса к визуальному дереву.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private static void TextBox_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
     {
         var textBox = sender as TextBox;

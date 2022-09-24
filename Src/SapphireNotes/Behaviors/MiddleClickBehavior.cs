@@ -13,6 +13,9 @@ public class MiddleClickBehavior : AvaloniaObject
     public static readonly AttachedProperty<ICommand> CommandProperty = AvaloniaProperty.RegisterAttached<MiddleClickBehavior, Interactive, ICommand>(
         "Command", default, false, BindingMode.OneTime);
 
+    /// <summary>
+    /// Подписка на события поведения при среднем щелчке мышью.
+    /// </summary>
     static MiddleClickBehavior()
     {
         CommandProperty.Changed.Subscribe(Observer.Create<AvaloniaPropertyChangedEventArgs>(e => {
