@@ -24,6 +24,10 @@ public class PreferencesService : IPreferencesService
 
     public Preferences Preferences { get; private set; }
 
+    /// <summary>
+    /// Загрузка приложения и конфигурация активной директории.
+    /// </summary>
+    /// <returns> Директория найдена - true, иначе false.</returns>
     public bool Load()
     {
         string appDataDirectory = string.Empty;
@@ -65,12 +69,19 @@ public class PreferencesService : IPreferencesService
         return false;
     }
 
+    /// <summary>
+    /// Обновление настроек.
+    /// </summary>
+    /// <param name="args"></param>
     public void UpdatePreferences(UpdatedPreferencesEventArgs args)
     {
         SavePreferences();
         Updated.Invoke(this, args);
     }
 
+    /// <summary>
+    /// Сохранение настроек.
+    /// </summary>
     public void SavePreferences()
     {
         using var writer = new BinaryWriter(File.Open(_preferencesFilePath, FileMode.OpenOrCreate));
@@ -85,6 +96,13 @@ public class PreferencesService : IPreferencesService
         writer.Write(Preferences.Window.PositionY);
     }
 
+    /// <summary>
+    /// Сохранение текущих настроек окна приложения.
+    /// </summary>
+    /// <param name="width">Высота.</param>
+    /// <param name="height">Ширина.</param>
+    /// <param name="positionX">Позиция по координате X.</param>
+    /// <param name="positionY">Позиция по координате Y.</param>
     public void SaveWindowPreferences(int width, int height, int positionX, int positionY)
     {
         if (width != Preferences.Window.Width || height != Preferences.Window.Height)
@@ -105,6 +123,9 @@ public class PreferencesService : IPreferencesService
         SavePreferences();
     }
 
+    /// <summary>
+    /// Считывание настроек.
+    /// </summary>
     private void ReadPreferences()
     {
         using var reader = new BinaryReader(File.Open(_preferencesFilePath, FileMode.Open));

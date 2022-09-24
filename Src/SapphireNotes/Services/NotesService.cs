@@ -51,6 +51,13 @@ public class NotesService : INotesService
         _notesRepository = notesRepository;
     }
 
+    /// <summary>
+    /// Создание заметки.
+    /// </summary>
+    /// <param name="name">Имя.</param>
+    /// <param name="fontFamily">Шрифт.</param>
+    /// <param name="fontSize">Размер шрифта.</param>
+    /// <exception cref="ValidationException"></exception>
     public void Create(string name, string fontFamily, int fontSize)
     {
         name = name.Trim();
@@ -83,6 +90,12 @@ public class NotesService : INotesService
         });
     }
 
+    /// <summary>
+    /// Создание быстрой заметки.
+    /// </summary>
+    /// <param name="content"> Содержимое заметки. </param>
+    /// <param name="fontFamily"> Шрифт. </param>
+    /// <param name="fontSize"> Размер шрифта. </param>
     public void CreateQuick(string content, string fontFamily, int fontSize)
     {
         string name = _notesRepository.Create("Quick note", content);
@@ -98,6 +111,12 @@ public class NotesService : INotesService
         });
     }
 
+    /// <summary>
+    /// Обновление заметки.
+    /// </summary>
+    /// <param name="newName"></param>
+    /// <param name="note"></param>
+    /// <exception cref="ValidationException"></exception>
     public void Update(string newName, Note note)
     {
         string originalName = note.Name;
@@ -133,6 +152,10 @@ public class NotesService : INotesService
         });
     }
 
+    /// <summary>
+    /// Архивация заметки.
+    /// </summary>
+    /// <param name="note"></param>
     public void Archive(Note note)
     {
         _notesRepository.Save(note.Name, note.Content);
@@ -153,6 +176,10 @@ public class NotesService : INotesService
         });
     }
 
+    /// <summary>
+    /// Восстановление заметки.
+    /// </summary>
+    /// <param name="note"></param>
     public void Restore(Note note)
     {
         var newName = _notesRepository.Restore(note.Name);
@@ -173,6 +200,10 @@ public class NotesService : INotesService
         });
     }
 
+    /// <summary>
+    /// Удаление замтки.
+    /// </summary>
+    /// <param name="note"></param>
     public void Delete(Note note)
     {
         if (note.Metadata.Archived.HasValue)
@@ -193,6 +224,10 @@ public class NotesService : INotesService
         });
     }
 
+    /// <summary>
+    /// Сохранение всех заметок.
+    /// </summary>
+    /// <param name="notes"></param>
     public void SaveAll(IEnumerable<Note> notes)
     {
         foreach (Note note in notes)
@@ -201,6 +236,10 @@ public class NotesService : INotesService
         }
     }
 
+    /// <summary>
+    /// Сохранение всех заметок с метаданными.
+    /// </summary>
+    /// <param name="notes"></param>
     public void SaveAllWithMetadata(IEnumerable<Note> notes)
     {
         foreach (Note note in notes)
@@ -216,6 +255,10 @@ public class NotesService : INotesService
         _notesMetadataService.Save();
     }
 
+    /// <summary>
+    /// Загрузка заметок.
+    /// </summary>
+    /// <returns></returns>
     public Note[] Load()
     {
         IEnumerable<Note> notes = _notesRepository.GetAll();
@@ -230,6 +273,10 @@ public class NotesService : INotesService
         return notes.OrderBy(x => x.LastWriteTime).ToArray();
     }
 
+    /// <summary>
+    /// Загрузка архива заметок.
+    /// </summary>
+    /// <returns></returns>
     public Note[] LoadArchived()
     {
         IEnumerable<Note> notes = _notesRepository.GetAllArchived();
@@ -242,12 +289,20 @@ public class NotesService : INotesService
         return notes.OrderByDescending(x => x.Metadata.Archived).ToArray();
     }
 
+    /// <summary>
+    /// Перемещение всех заметок.
+    /// </summary>
+    /// <param name="newDirectory"> Новая директория. </param>
     public void MoveAll(string newDirectory)
     {
         var fileSystemRepository = (IFileSystemRepository)_notesRepository;
         fileSystemRepository.MoveAll(newDirectory);
     }
 
+    /// <summary>
+    /// Получение шрифта для всех используемых заметок.
+    /// </summary>
+    /// <returns></returns>
     public string GetFontThatAllNotesUse()
     {
         var fonts = _notesMetadataService.GetDistinctFonts();
@@ -259,6 +314,10 @@ public class NotesService : INotesService
         };
     }
 
+    /// <summary>
+    /// Получение размера шрифта для всех используемых заметок.
+    /// </summary>
+    /// <returns></returns>
     public int? GetFontSizeThatAllNotesUse()
     {
         var fontSizes = _notesMetadataService.GetDistinctFontSizes();
@@ -270,11 +329,19 @@ public class NotesService : INotesService
         };
     }
 
+    /// <summary>
+    /// Создание используемого шрифта для всех
+    /// </summary>
+    /// <param name="font"> Шрифт. </param>
     public void SetFontForAll(string font)
     {
         _notesMetadataService.SetFontForAll(font);
     }
 
+    /// <summary>
+    /// Создание размера шрифта для всех.
+    /// </summary>
+    /// <param name="fontSize"> Размер шрифта - целое число. </param>
     public void SetFontSizeForAll(int fontSize)
     {
         _notesMetadataService.SetFontSizeForAll(fontSize);
